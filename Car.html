@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Master Test - Thematic Animations</title>
+    
+    <style>
+        /* Base Body Style */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5; /* Default background */
+            transition: background-color 0.8s ease, transform 0.5s ease; /* Smooth transition for background change */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-size: cover; /* For gradient animations */
+        }
+
+        /* --- THEMATIC BACKGROUNDS & ANIMATIONS --- */
+        
+        /* 1. Nature/Fog Theme (Slow, gentle movement) */
+        .theme-nature {
+            background-color: #e0e6e9; /* Light, foggy blue-gray */
+            background-image: linear-gradient(-45deg, #e0e6e9, #c3d9e2, #e0e6e9);
+            animation: slow-pan 20s ease infinite alternate;
+            background-size: 300% 300%;
+        }
+        @keyframes slow-pan {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* 2. History/Concrete Theme (Solid, slight texture change) */
+        .theme-history {
+            background-color: #f5f0e3; /* Soft beige/sand color */
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.1);
+            animation: subtle-grain 5s linear infinite;
+        }
+        @keyframes subtle-grain {
+            0% { opacity: 1; }
+            50% { opacity: 0.99; } /* Tiny opacity shift to suggest texture/age */
+            100% { opacity: 1; }
+        }
+
+        /* 3. Tech Theme (Subtle, glowing pulse) */
+        .theme-tech {
+            background-color: #e5f5f9; /* Light cyan/blue */
+            box-shadow: 0 0 10px rgba(0, 150, 255, 0.3) inset;
+            animation: gentle-pulse 4s ease-in-out infinite;
+        }
+        @keyframes gentle-pulse {
+            0% { box-shadow: 0 0 10px rgba(0, 150, 255, 0.3) inset; }
+            50% { box-shadow: 0 0 20px rgba(0, 150, 255, 0.5) inset; }
+            100% { box-shadow: 0 0 10px rgba(0, 150, 255, 0.3) inset; }
+        }
+
+        /* 4. Library/Knowledge Theme (Warm, subtle fade) */
+        .theme-library {
+            background-color: #fcf8e3; /* Creamy yellow for old paper */
+            animation: warm-fade 8s ease infinite alternate;
+        }
+        @keyframes warm-fade {
+            0% { background-color: #fcf8e3; }
+            100% { background-color: #fcf4e0; } /* Slight fade to a warmer tone */
+        }
+        
+        /* General Container and UI Styles (Same as before) */
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            z-index: 10; /* Keep content above background effects */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .status-panel {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        #text-display {
+            border: 1px solid #ced4da;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+            background-color: #f8d7da;
+            border-radius: 2px;
+        }
+        .current {
+            border-bottom: 3px solid #007bff;
+        }
+
+        #text-input {
+            width: calc(100% - 40px);
+            padding: 20px;
+            font-size: 1.2em;
+            border: 1px solid #adb5bd;
+            border-radius: 8px;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
+        }
+        #text-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .controls button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #start-button {
+            background-color: #28a745;
+            color: white;
+        }
+        #start-button:hover {
+            background-color: #218838;
+        }
+        #reset-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        #reset-button:hover {
+            background-color: #c82333;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 100; /* Ensure modal is on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        #close-modal {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        #close-modal:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <h1>Typing Speed Test</h1>
+        
+        <div class="status-panel">
+            <div id="timer">Time: 60s</div>
+            <div id="wpm">WPM: 0</div>
+            <div id="accuracy">Accuracy: 0%</div>
+        </div>
+
+        <div id="text-display">
+            Click **Start Test** to begin.
+        </div>
+
+        <textarea 
+            id="text-input" 
+            placeholder="Start typing here when the test begins..."
+            rows="5" 
+            disabled
+        ></textarea>
+
+        <div class="controls">
+            <button id="start-button">Start Test</button>
+            <button id="reset-button">Reset</button>
+        </div>
+
+        <div id="result-modal" class="modal">
+            <div class="modal-content">
+                <h2>Test Complete!</h2>
+                <p>Your Final WPM: <span id="final-wpm"></span></p>
+                <p>Your Accuracy: <span id="final-accuracy"></span></p>
+                <button id="close-modal">Try Again</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Mapping of text to themes, making it easy to categorize content
+        const TEXT_THEMES = [
+            { text: "The quick brown fox jumps over the lazy dog.", theme: 'nature' },
+            { text: "Programming is not about what you know, it's about what you can figure out.", theme: 'tech' },
+            { text: "A traveler's guide to the galaxy suggests that the most useful thing one can have is a towel. It serves many purposes, from drying oneself to being waved as a distress signal or used for a picnic.", theme: 'tech' },
+            { text: "The morning fog rolled in from the coast, a thick, damp blanket silencing the usual sounds of the city. Only the distant clang of a buoy bell could be heard, a lonely rhythm echoing through the gray stillness.", theme: 'nature' },
+            { text: "In ancient Rome, concrete was a revolutionary material, allowing engineers to build structures like the Pantheon which have stood for two thousand years. Its durability came from a unique mixture of volcanic ash and lime.", theme: 'history' },
+            { text: "Creativity often involves a period of intense focus followed by a necessary break, allowing the subconscious mind to connect disparate ideas. Sometimes, the best solution arrives only when you stop trying so hard.", theme: 'tech' },
+            { text: "The discovery of penicillin by Alexander Fleming in 1928 fundamentally changed medicine, ushering in the age of antibiotics and saving millions of lives worldwide. It was a happy accident born from a messy laboratory bench.", theme: 'history' },
+            { text: "To travel is to evolve. The simple act of seeing the world from a different perspective challenges deeply held assumptions and broadens one's understanding of human experience and culture.", theme: 'nature' },
+            { text: "The library was a silent world of knowledge, its towering shelves filled with the voices of centuries past. The scent of old paper and dust hung heavy in the air, inviting patrons to explore history and imagination.", theme: 'library' }
+        ];
+
+        const TEST_DURATION_SECONDS = 60; 
+
+        let timerInterval;
+        let timeLeft = TEST_DURATION_SECONDS;
+        let isRunning = false;
+        let startTime = 0;
+        let totalKeystrokes = 0;
+        let correctKeystrokes = 0;
+        let currentText = "";
+        let currentLetterIndex = 0;
+
+        // --- DOM Elements ---
+        const textDisplay = document.getElementById('text-display');
+        const textInput = document.getElementById('text-input');
+        const timerDisplay = document.getElementById('timer');
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const startButton = document.getElementById('start-button');
+        const resetButton = document.getElementById('reset-button');
+        const modal = document.getElementById('result-modal');
+        const finalWPM = document.getElementById('final-wpm');
+        const finalAccuracy = document.getElementById('final-accuracy');
+        const closeModalButton = document.getElementById('close-modal');
+        const body = document.body; // Reference to the body element
+
+        // --- Functions ---
+
+        function applyTheme(themeName) {
+            // Remove any existing theme classes AND remove animation styles
+            body.className = body.className.split(' ').filter(c => !c.startsWith('theme-')).join(' ');
+            
+            // Apply the new theme class
+            body.classList.add(`theme-${themeName}`);
+        }
+
+        function loadNewText() {
+            // Select a random text object from the mapped array
+            const randomIndex = Math.floor(Math.random() * TEXT_THEMES.length);
+            const selectedItem = TEXT_THEMES[randomIndex];
+            
+            currentText = selectedItem.text;
+            applyTheme(selectedItem.theme); // Apply the theme and animation here!
+            
+            // Creates individual <span> elements for each character to enable styling
+            textDisplay.innerHTML = currentText.split('').map((char, index) => {
+                let className = (index === 0) ? 'current' : '';
+                return `<span id="char-${index}" class="${className}">${char}</span>`;
+            }).join('');
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Time: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endTest();
+                }
+                
+                if (totalKeystrokes > 0) {
+                    updateMetrics();
+                }
+
+            }, 1000);
+        }
+
+        function updateMetrics() {
+            const elapsedMinutes = (Date.now() - startTime) / 60000;
+            const wpm = elapsedMinutes > 0 ? Math.round((correctKeystrokes / 5) / elapsedMinutes) : 0;
+            const accuracy = totalKeystrokes > 0 ? ((correctKeystrokes / totalKeystrokes) * 100).toFixed(1) : 0;
+
+            wpmDisplay.textContent = `WPM: ${wpm}`;
+            accuracyDisplay.textContent = `Accuracy: ${accuracy}%`;
+        }
+
+        function handleInput(event) {
+            if (!isRunning) return;
+
+            const typedChar = event.data; 
+
+            if (typedChar === null || currentLetterIndex >= currentText.length) { 
+                event.preventDefault(); 
+                return; 
+            }
+
+            const expectedChar = currentText[currentLetterIndex];
+            totalKeystrokes++;
+
+            const charSpan = document.getElementById(`char-${currentLetterIndex}`);
+            if (charSpan) {
+                charSpan.classList.remove('current'); 
+                
+                if (typedChar === expectedChar) {
+                    charSpan.classList.add('correct');
+                    charSpan.classList.remove('incorrect');
+                    correctKeystrokes++;
+                } else {
+                    charSpan.classList.add('incorrect');
+                    charSpan.classList.remove('correct');
+                }
+            }
+            
+            currentLetterIndex++;
+
+            const nextCharSpan = document.getElementById(`char-${currentLetterIndex}`);
+            if (nextCharSpan) {
+                nextCharSpan.classList.add('current');
+            }
+
+            if (currentLetterIndex >= currentText.length) {
+                endTest();
+            }
+        }
+
+        function startTest() {
+            if (isRunning) return; 
+
+            isRunning = true;
+            textInput.disabled = false;
+            textInput.value = ''; 
+            textInput.focus();
+            startButton.disabled = true;
+            
+            timeLeft = TEST_DURATION_SECONDS;
+            totalKeystrokes = 0;
+            correctKeystrokes = 0;
+            currentLetterIndex = 0;
+            
+            timerDisplay.textContent = `Time: ${timeLeft}s`;
+            wpmDisplay.textContent = 'WPM: 0';
+            accuracyDisplay.textContent = 'Accuracy: 0%';
+            
+            loadNewText(); 
+            startTimer();
+        }
+
+        function endTest() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            textInput.disabled = true;
+            startButton.disabled = false;
+            
+            updateMetrics(); 
+
+            finalWPM.textContent = wpmDisplay.textContent.replace('WPM: ', '');
+            finalAccuracy.textContent = accuracyDisplay.textContent.replace('Accuracy: ', '');
+            modal.style.display = 'flex';
+        }
+
+        function resetTest() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            textInput.value = '';
+            textInput.disabled = true;
+            startButton.disabled = false;
+
+            timeLeft = TEST_DURATION_SECONDS;
+            timerDisplay.textContent = `Time: ${TEST_DURATION_SECONDS}s`;
+            wpmDisplay.textContent = 'WPM: 0';
+            accuracyDisplay.textContent = 'Accuracy: 0%';
+
+            loadNewText();
+            modal.style.display = 'none';
+        }
+
+        // --- Event Listeners ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            resetTest(); 
+            textInput.addEventListener('input', handleInput); 
+            startButton.addEventListener('click', startTest);
+            resetButton.addEventListener('click', resetTest);
+            closeModalButton.addEventListener('click', resetTest);
+        });
+    </script>
+</body>
+</html>
